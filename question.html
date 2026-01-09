@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Check - Noir Investigation</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Special+Elite&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        .font-typewriter { font-family: 'Courier Prime', monospace; }
+        .font-heading { font-family: 'Special Elite', cursive; }
+
+        /* Grain Texture */
+        .bg-grain {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Modal styling */
+        .security-modal {
+            background: rgba(44, 26, 26, 0.95);
+            border: 3px solid #d4a574;
+            border-radius: 8px;
+            padding: 60px 50px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+            position: relative;
+        }
+
+        .modal-title {
+            font-family: 'Courier Prime', monospace;
+            font-size: 32px;
+            letter-spacing: 4px;
+            color: #d4a574;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .modal-divider {
+            height: 2px;
+            background: #d4a574;
+            margin: 20px 0 40px 0;
+        }
+
+        .modal-question {
+            font-family: 'Courier Prime', monospace;
+            color: #d4c5a3;
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .option-button {
+            width: 100%;
+            padding: 18px 20px;
+            margin-bottom: 20px;
+            border: 2px solid #5c3a3a;
+            background: #1a0f0f;
+            color: #d4a574;
+            font-family: 'Courier Prime', monospace;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-radius: 4px;
+        }
+
+        .option-button:hover {
+            background: #3d2424;
+            border-color: #d4a574;
+            transform: translateX(5px);
+        }
+
+        .option-button:active {
+            background: #d4a574;
+            color: #1a0f0f;
+            transform: translateX(3px);
+        }
+
+        .option-letter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            border: 2px solid #d4a574;
+            border-radius: 50%;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .option-button:hover .option-letter {
+            background: #d4a574;
+            color: #1a0f0f;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #d4a574;
+            font-size: 32px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            color: #d4c5a3;
+            transform: scale(1.1);
+        }
+
+        .feedback-message {
+            font-family: 'Courier Prime', monospace;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+
+        .feedback-correct {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 2px solid #10b981;
+        }
+
+        .feedback-incorrect {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 2px solid #ef4444;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#1a0f0f] text-[#d4c5a3] font-sans overflow-x-hidden relative selection:bg-emerald-900 selection:text-white">
+    
+    <!-- Global Texture Overlays -->
+    <div class="fixed inset-0 pointer-events-none bg-grain z-50"></div>
+    <div class="fixed inset-0 pointer-events-none z-40 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.5)_100%)]"></div>
+
+    <!-- Question Modal -->
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="security-modal animate-fade-in">
+            <button class="close-btn" onclick="history.back()">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+
+            <div class="modal-title">SECURITY CHECK</div>
+            <div class="modal-divider"></div>
+
+            <div class="modal-question" id="questionText"></div>
+
+            <div id="optionsContainer"></div>
+
+            <div id="feedbackMessage" class="feedback-message"></div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Dynamic questions per chapter (0-5)
+        const QUESTIONS = [
+            {
+                text: "What was Swetha's first real investment?",
+                options: [
+                    { id: 'A', text: 'Perfection' },
+                    { id: 'B', text: 'Curiosity' },
+                    { id: 'C', text: 'Comfort' }
+                ],
+                correct: 'B'
+            },
+            {
+                text: "What kind of student was Swetha?",
+                options: [
+                    { id: 'A', text: 'Topper in everything' },
+                    { id: 'B', text: 'Curious but confused' },
+                    { id: 'C', text: 'Always daydreaming' }
+                ],
+                correct: 'B'
+            },
+            {
+                text: "What shocked Swetha most about work life?",
+                options: [
+                    { id: 'A', text: 'Bugs exist in production' },
+                    { id: 'B', text: 'Code is never really finished' },
+                    { id: 'C', text: 'Meetings have meetings' }
+                ],
+                correct: 'B'
+            },
+            {
+                text: "How do skills actually grow?",
+                options: [
+                    { id: 'A', text: 'Watching tutorials' },
+                    { id: 'B', text: 'Practicing and failing' },
+                    { id: 'C', text: 'Pretending confidence' }
+                ],
+                correct: 'B'
+            },
+            {
+                text: "Why did Swetha pursue certifications?",
+                options: [
+                    { id: 'A', text: 'For display' },
+                    { id: 'B', text: 'To deepen understanding' },
+                    { id: 'C', text: 'For LinkedIn updates' }
+                ],
+                correct: 'B'
+            },
+            {
+                text: "What does Swetha prioritize today?",
+                options: [
+                    { id: 'A', text: 'Speed' },
+                    { id: 'B', text: 'Meaning and understanding' },
+                    { id: 'C', text: 'Perfectionism' }
+                ],
+                correct: 'B'
+            }
+        ];
+
+        // Get current chapter from URL parameter, default to 0
+        function getCurrentChapter() {
+            const params = new URLSearchParams(window.location.search);
+            const chapter = params.get('chapter');
+            return chapter ? parseInt(chapter) : 0;
+        }
+
+        function selectOption(optionId) {
+            const feedbackElement = document.getElementById('feedbackMessage');
+            const optionsContainer = document.getElementById('optionsContainer');
+            const currentChapter = getCurrentChapter();
+            const correctAnswer = QUESTIONS[Math.min(Math.max(currentChapter, 0), QUESTIONS.length - 1)].correct;
+
+            if (optionId === correctAnswer) {
+                feedbackElement.textContent = '✓ CORRECT - Access Granted!';
+                feedbackElement.className = 'feedback-message feedback-correct';
+                feedbackElement.style.display = 'block';
+                optionsContainer.style.opacity = '0.5';
+                optionsContainer.style.pointerEvents = 'none';
+                
+                setTimeout(() => {
+                    // Reveal the current chapter in main.html
+                    window.location.href = 'main.html?chapter=' + currentChapter + '&revealed=true';
+                }, 2000);
+            } else {
+                feedbackElement.textContent = '✗ INCORRECT - Try Again';
+                feedbackElement.className = 'feedback-message feedback-incorrect';
+                feedbackElement.style.display = 'block';
+                
+                setTimeout(() => {
+                    feedbackElement.style.display = 'none';
+                }, 2000);
+            }
+        }
+
+        // Populate question and options on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const chapterNum = getCurrentChapter();
+            const q = QUESTIONS[Math.min(Math.max(chapterNum, 0), QUESTIONS.length - 1)];
+            const questionTextEl = document.getElementById('questionText');
+            const optionsContainerEl = document.getElementById('optionsContainer');
+            if (questionTextEl && optionsContainerEl && q) {
+                questionTextEl.textContent = q.text;
+                optionsContainerEl.innerHTML = q.options.map(opt => (
+                    `<button class="option-button" onclick="selectOption('${opt.id}')">
+                        <span class="option-letter">${opt.id}</span>
+                        <span>${opt.text}</span>
+                    </button>`
+                )).join('');
+            }
+        });
+    </script>
+</body>
+</html>

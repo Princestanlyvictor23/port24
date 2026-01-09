@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storyboard - Noir Investigation</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Special+Elite&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        .font-typewriter { font-family: 'Courier Prime', monospace; }
+        .font-heading { font-family: 'Special Elite', cursive; }
+
+        /* Grain Texture */
+        .bg-grain {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        .animate-fade-out { animation: fadeOut 0.35s ease-in forwards; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        body {
+            background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+        }
+
+        .storyboard-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            max-width: 100%;
+        }
+
+        /* Main content area: 30% left gif, 70% right column */
+        .story-content {
+            display: flex;
+            gap: 20px;
+            flex: 1;
+            margin-top: 20px;
+            width: 100%;
+            min-height: calc(100vh - 120px);
+        }
+
+        .left-box {
+            flex: 0 0 30%;
+            background: #e8dcc8;
+            border: 4px solid #4a3428;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+        }
+
+        .gif-fill {
+            flex: 1;
+            background: #f1e7d3;
+            background-image: url('swetha.mp4');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain; /* change to cover if desired */
+            min-height: 0;
+        }
+
+        .right-box {
+            flex: 0 0 70%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Story panel fills right side until question is shown */
+        .story-panel {
+            flex: 1 1 auto;
+            background: #e8dcc8;
+            border: 4px solid #4a3428;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow: hidden;
+        }
+
+        .story-panel .story-body {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .story-box::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .story-box::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .story-box::-webkit-scrollbar-thumb {
+            background: #8b6f47;
+            border-radius: 4px;
+        }
+
+        .story-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c1a1a;
+            text-align: center;
+            border-bottom: 2px solid #4a3428;
+            padding-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .story-subtitle {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: #4a3428;
+            text-align: center;
+            letter-spacing: 2px;
+            margin-top: 6px;
+            text-transform: uppercase;
+        }
+
+        .story-text {
+            font-family: 'Courier Prime', monospace;
+            color: #3c2c1c;
+            font-size: 17px;
+            line-height: 1.7;
+            text-align: left;
+        }
+
+        .story-text strong {
+            color: #2c1a1a;
+            font-weight: bold;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #d4a574;
+            color: #d4a574;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s;
+            z-index: 10;
+            font-family: 'Courier Prime', monospace;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-button:hover {
+            background: rgba(212, 165, 116, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Question box takes full height when revealed */
+        .question-box {
+            background: #e8dcc8;
+            border: 4px solid #4a3428;
+            border-radius: 8px;
+            padding: 20px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .question-title {
+            font-family: 'Courier Prime', monospace;
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c1a1a;
+            text-align: center;
+            border-bottom: 2px solid #4a3428;
+            padding-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .question-divider {
+            height: 2px;
+            background: #4a3428;
+            margin: 8px 0 15px 0;
+        }
+
+        .question-text {
+            font-family: 'Courier Prime', monospace;
+            color: #3c2c1c;
+            font-size: 15px;
+            text-align: center;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+            margin-bottom: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .option-btn {
+            flex: 1;
+            min-width: 150px;
+            padding: 12px 16px;
+            border: 2px solid #4a3428;
+            background: #d4c5a3;
+            color: #2c1a1a;
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border-radius: 4px;
+        }
+
+        .option-btn:hover {
+            background: #c4b555;
+            border-color: #8b6f47;
+            transform: scale(1.05);
+        }
+
+        .option-btn:active {
+            background: #d4a574;
+            color: #1a0f0f;
+            transform: scale(0.95);
+        }
+
+        .option-letter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: 2px solid #4a3428;
+            border-radius: 50%;
+            font-weight: bold;
+            flex-shrink: 0;
+            color: #2c1a1a;
+        }
+
+        .option-btn:hover .option-letter {
+            background: #d4a574;
+            color: #1a0f0f;
+        }
+
+        .feedback-message {
+            font-family: 'Courier Prime', monospace;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+
+        .feedback-correct {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 2px solid #10b981;
+        }
+
+        .feedback-incorrect {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 2px solid #ef4444;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-[#d4c5a3] font-sans overflow-x-hidden relative selection:bg-emerald-900 selection:text-white">
+    
+    <!-- Global Texture Overlays -->
+    <div class="fixed inset-0 pointer-events-none bg-grain z-50"></div>
+    <div class="fixed inset-0 pointer-events-none z-40 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.5)_100%)]"></div>
+
+    <!-- Back Button -->
+    <a href="main.html" class="back-button">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i> Back
+    </a>
+
+    <!-- Storyboard Content -->
+    <div class="storyboard-container animate-fade-in">
+        <div class="story-content">
+            <!-- Left: 30% full-height GIF -->
+            <div class="left-box">
+                <div class="gif-fill" aria-label="Story GIF"></div>
+            </div>
+
+            <!-- Right: 70% split vertically 60/40 -->
+            <div class="right-box">
+                <div class="story-panel">
+                    <div class="story-title">Initial Capital</div>
+                    <div class="story-subtitle">REF: The Beginning</div>
+                    <div id="storyBody" class="story-body story-text"></div>
+                    <button id="continueBtn" style="display:none; margin-top:12px; align-self:flex-start; background:#2c1a1a; color:#d4c5a3; border:2px solid #4a3428; padding:10px 16px; font-family:'Courier Prime', monospace; font-weight:bold; letter-spacing:1px; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.4);">CONTINUE</button>
+                </div>
+
+                <div class="question-box" style="display:none;">
+                    <div class="question-title">SECURITY CHECK</div>
+                    <div class="question-divider"></div>
+                    <div class="question-text" id="questionText"></div>
+                    
+                    <div class="options-container" id="optionsContainer"></div>
+
+                    <div id="feedbackMessage" class="feedback-message"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // Typewriter for story content (handles HTML tags without delaying them)
+        function typeWriterHTML(el, html, speed = 30, onComplete) {
+            let i = 0;
+            el.innerHTML = '';
+
+            function type() {
+                if (i >= html.length) {
+                    if (typeof onComplete === 'function') onComplete();
+                    return;
+                }
+
+                if (html[i] === '<') {
+                    const closeIdx = html.indexOf('>', i);
+                    if (closeIdx !== -1) {
+                        el.innerHTML += html.slice(i, closeIdx + 1);
+                        i = closeIdx + 1;
+                        requestAnimationFrame(type);
+                        return;
+                    }
+                }
+
+                el.innerHTML += html[i];
+                i++;
+                setTimeout(type, speed);
+            }
+
+            type();
+        }
+
+        // All six chapters with different stories and titles
+        const CHAPTERS = [
+            {
+                num: 0,
+                title: "INITIAL CAPITAL",
+                subtitle: "REF: THE BEGINNING",
+                html: `<p>Once upon a time, not very far away, there lived a girl named Swetha.</p>
+                       <p>She didn't arrive with loud announcements or grand speeches.</p>
+                       <p>She arrived with a quiet curiosity, the kind that sits patiently and observes before asking questions.</p>
+                       <p>Swetha always seemed to be thinking.</p>
+                       <p>Not because she knew everything—<br/>but because she wanted to.</p>
+                       <p>Some stories begin with confidence.</p>
+                       <p>This one begins with curiosity…<br/>which, if we're honest, causes far more adventures.</p>`
+            },
+            {
+                num: 1,
+                title: "THE CURIOUS MIND",
+                subtitle: "REF: EARLY DISCOVERIES",
+                html: `<p>Long before code and screens, there was a little girl with a pencil.</p>
+                       <p>Swetha loved to draw—<br/>not just shapes, but ideas.</p>
+                       <p>She asked "why" often enough that adults learned to sigh creatively.</p>
+                       <p>School taught her lessons,<br/>but curiosity taught her more.</p>
+                       <p>While rules explained what to do,<br/>her questions explored what if.</p>
+                       <p>And somewhere between notebooks, drawings, and wondering minds,<br/>a quiet thought began to form:</p>
+                       <p>"I want to understand how things work."</p>
+                       <p>Stories usually start exactly like this—<br/>softly, without anyone noticing.</p>`
+            },
+            {
+                num: 2,
+                title: "COLLISION WITH REALITY",
+                subtitle: "REF: PROFESSIONAL ENTRY",
+                html: `<p>Then one day, the real world knocked.</p>
+                       <p>It didn't ask politely.</p>
+                       <p>Work arrived with deadlines, meetings, and bugs that appeared without warning—<br/>especially when everything seemed fine five minutes ago.</p>
+                       <p>Swetha learned quickly that<br/>real work doesn't follow textbooks,<br/>and plans often change their minds.</p>
+                       <p>Mistakes became frequent visitors.<br/>Some stayed longer than welcome.</p>
+                       <p>But instead of being afraid,<br/>Swetha listened.</p>
+                       <p>Because every mistake had something to say—<br/>and she was finally fluent enough to hear it.</p>`
+            },
+            {
+                num: 3,
+                title: "THE CRAFT EMERGES",
+                subtitle: "REF: SKILL DEVELOPMENT",
+                html: `<p>Skills did not appear overnight.<br/>They arrived slowly…<br/>sometimes disguised as frustration.</p>
+                       <p>Swetha tried.<br/>Failed.<br/>Fixed.<br/>Tried again.</p>
+                       <p>She learned that understanding mattered more than speed,<br/>and patience mattered more than cleverness.</p>
+                       <p>Some lessons came from practice.<br/>Others came from watching quietly.<br/>A few came from doing everything wrong once.</p>
+                       <p>But each time, she picked up something new—<br/>not just skills,<br/>but confidence.</p>
+                       <p>The story was no longer about getting things right.<br/>It was about getting better.</p>`
+            },
+            {
+                num: 4,
+                title: "CONTINUOUS LEARNING",
+                subtitle: "REF: BEYOND THE BASICS",
+                html: `<p>Even after long days,<br/>Swetha kept learning.</p>
+                       <p>Not because she had to—<br/>but because curiosity refused to sleep.</p>
+                       <p>She explored ideas beyond her work,<br/>collected lessons from courses,<br/>and discovered joy in understanding things more deeply.</p>
+                       <p>Certificates appeared along the way—<br/>some shiny, some quiet.</p>
+                       <p>But the real reward was clarity.<br/>Each new concept made the world feel a little less confusing.</p>
+                       <p>Learning, she realized,<br/>was not a phase.<br/>It was a companion.</p>`
+            },
+            {
+                num: 5,
+                title: "THE ENGINEER REALIZED",
+                subtitle: "REF: PRESENT MASTERY",
+                html: `<p>Today, Swetha stands at a calm place in her story.</p>
+                       <p>She doesn't rush to code.<br/>She thinks first.<br/>She designs gently.<br/>She builds with care.</p>
+                       <p>She knows she isn't perfect—<br/>and no longer tries to be.</p>
+                       <p>Instead, she chooses meaning over speed,<br/>understanding over shortcuts,<br/>and curiosity over ego.</p>
+                       <p>This story doesn't end here.</p>
+                       <p>Because Swetha is still becoming—<br/>an engineer who learns,<br/>builds,<br/>and keeps asking better questions.</p>
+                       <p>And perhaps…<br/>that's the best kind of ending a story can have.</p>`
+            }
+        ];
+
+        function getChapterNumber() {
+            const params = new URLSearchParams(window.location.search);
+            let ch = params.get('chapter');
+            let chapterNum = ch ? parseInt(ch) : 0;
+            // Ensure chapter is between 0-5
+            if (chapterNum < 0) chapterNum = 0;
+            if (chapterNum > 5) chapterNum = 5;
+            return chapterNum;
+        }
+
+        function getStoryForChapter(chapterNum) {
+            const ch = CHAPTERS.find(c => c.num === chapterNum);
+            return ch ? ch.html : CHAPTERS[0].html;
+        }
+
+        function getTitleForChapter(chapterNum) {
+            const ch = CHAPTERS.find(c => c.num === chapterNum);
+            return ch ? ch.title : CHAPTERS[0].title;
+        }
+
+        function getSubtitleForChapter(chapterNum) {
+            const ch = CHAPTERS.find(c => c.num === chapterNum);
+            return ch ? ch.subtitle : CHAPTERS[0].subtitle;
+        }
+
+        const storyHTML = getStoryForChapter(getChapterNumber());
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const chapterNum = getChapterNumber();
+            const storyEl = document.getElementById('storyBody');
+            const storyTitle = document.querySelector('.story-title');
+            const storySubtitle = document.querySelector('.story-subtitle');
+            const continueBtn = document.getElementById('continueBtn');
+            const questionBox = document.querySelector('.question-box');
+            const storyPanel = document.querySelector('.story-panel');
+
+            // Update title and subtitle for this chapter
+            if (storyTitle) {
+                storyTitle.textContent = getTitleForChapter(chapterNum);
+            }
+            if (storySubtitle) {
+                storySubtitle.textContent = getSubtitleForChapter(chapterNum);
+            }
+
+            if (questionBox) {
+                questionBox.style.display = 'none';
+            }
+
+            if (storyEl) {
+                typeWriterHTML(storyEl, storyHTML, 25, () => {
+                    if (continueBtn) continueBtn.style.display = 'inline-flex';
+                });
+            }
+
+            if (continueBtn && questionBox && storyPanel) {
+                continueBtn.addEventListener('click', () => {
+                    continueBtn.style.display = 'none';
+                    // Fade out story, then hide it and show question
+                    storyPanel.classList.add('animate-fade-out');
+                    storyPanel.addEventListener('animationend', () => {
+                        storyPanel.style.display = 'none';
+                        questionBox.style.display = 'flex';
+                        questionBox.classList.add('animate-fade-in');
+                    }, { once: true });
+                });
+            }
+        });
+
+        // Dynamic questions per chapter (0-5)
+        const QUESTIONS = [
+            {
+                text: "What was Swetha's first real investment?",
+                options: [
+                    { id: 'A', text: 'Perfection' },
+                    { id: 'B', text: 'Curiosity' },
+                    { id: 'C', text: 'Comfort' }
+                ],
+                correct: 'B'
+            },
+            {
+                text: "What kind of student was Swetha?",
+                options: [
+                    { id: 'A', text: 'Topper in everything' },
+                    { id: 'B', text: 'Curious but confused' },
+                    { id: 'C', text: 'Always daydreaming' }
+                ],
+                correct: 'B'
+            },
+            {
+                text: "What shocked Swetha most about work life?",
+                options: [
+                    { id: 'A', text: 'Bugs exist in production' },
+                    { id: 'B', text: 'Code is never really finished' },
+                    { id: 'C', text: 'Meetings have meetings' }
+                ],
+                correct: 'B'
+            },
+            {
+                text: "How do skills actually grow?",
+                options: [
+                    { id: 'A', text: 'Watching tutorials' },
+                    { id: 'B', text: 'Practicing and failing' },
+                    { id: 'C', text: 'Pretending confidence' }
+                ],
+                correct: 'B'
+            },
+            {
+                text: "Why did Swetha pursue certifications?",
+                options: [
+                    { id: 'A', text: 'For display' },
+                    { id: 'B', text: 'To deepen understanding' },
+                    { id: 'C', text: 'For LinkedIn updates' }
+                ],
+                correct: 'B'
+            },
+            {
+                text: "What does Swetha prioritize today?",
+                options: [
+                    { id: 'A', text: 'Speed' },
+                    { id: 'B', text: 'Meaning and understanding' },
+                    { id: 'C', text: 'Perfectionism' }
+                ],
+                correct: 'B'
+            }
+        ];
+
+        // Get current chapter from URL parameter
+        function getCurrentChapter() {
+            const params = new URLSearchParams(window.location.search);
+            const chapter = params.get('chapter');
+            return chapter ? parseInt(chapter) : 0;
+        }
+
+        function selectOption(optionId) {
+            const feedbackElement = document.getElementById('feedbackMessage');
+            const optionsContainer = document.getElementById('optionsContainer');
+            const currentChapter = getCurrentChapter();
+            const correctAnswer = QUESTIONS[Math.min(Math.max(currentChapter, 0), QUESTIONS.length - 1)].correct;
+
+            if (optionId === correctAnswer) {
+                feedbackElement.textContent = '✓ CORRECT - Access Granted!';
+                feedbackElement.className = 'feedback-message feedback-correct';
+                feedbackElement.style.display = 'block';
+                optionsContainer.style.opacity = '0.5';
+                optionsContainer.style.pointerEvents = 'none';
+                
+                setTimeout(() => {
+                    // Redirect to main.html with chapter and revealed parameters
+                    window.location.href = 'main.html?chapter=' + currentChapter + '&revealed=true';
+                }, 2000);
+            } else {
+                feedbackElement.textContent = '✗ INCORRECT - Try Again';
+                feedbackElement.className = 'feedback-message feedback-incorrect';
+                feedbackElement.style.display = 'block';
+                
+                setTimeout(() => {
+                    feedbackElement.style.display = 'none';
+                }, 2000);
+            }
+        }
+
+        // Populate question dynamically when showing the question box
+        window.addEventListener('DOMContentLoaded', () => {
+            const chapterNum = getCurrentChapter();
+            const q = QUESTIONS[Math.min(Math.max(chapterNum, 0), QUESTIONS.length - 1)];
+            const questionTextEl = document.getElementById('questionText');
+            const optionsContainerEl = document.getElementById('optionsContainer');
+            if (questionTextEl && optionsContainerEl && q) {
+                questionTextEl.textContent = q.text;
+                optionsContainerEl.innerHTML = q.options.map(opt => (
+                    `<button class="option-btn" onclick="selectOption('${opt.id}')">
+                        <span class="option-letter">${opt.id}</span>
+                        <span>${opt.text}</span>
+                    </button>`
+                )).join('');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investigation Portfolio</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Special+Elite&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom Styles -->
+    <style>
+        .font-typewriter { font-family: 'Courier Prime', monospace; }
+        .font-heading { font-family: 'Special Elite', cursive; }
+        .font-handwriting { font-family: 'Caveat', cursive; }
+
+        /* Grain Texture */
+        .bg-grain {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+
+        /* Animations */
+        .animate-flicker {
+            animation: flicker 4s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 0.95; }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.8; }
+        }
+
+        .animate-shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 1s ease-out forwards;
+        }
+        
+        .animate-slide-up {
+            animation: slideUp 0.7s ease-out forwards;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(1rem); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .paper-shadow {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Scrollbar hiding */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+
+        /* Blur Utility */
+        .blur-text {
+            filter: blur(3px);
+            user-select: none;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#1a0f0f] text-[#d4c5a3] font-sans overflow-x-hidden relative selection:bg-emerald-900 selection:text-white">
+
+    <!-- Global Texture Overlays -->
+    <div class="fixed inset-0 pointer-events-none bg-grain z-50"></div>
+    <div class="fixed inset-0 pointer-events-none z-40 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)]"></div>
+
+    <!-- Header UI -->
+    <header class="fixed top-0 left-0 right-0 z-30 p-4 flex justify-between items-start pointer-events-auto bg-gradient-to-b from-[#1a0f0f] to-transparent md:bg-none">
+        <div class="relative flex gap-4">
+            <button onclick="toggleHelp()" class="p-2 bg-[#2c1a1a] border border-[#d4c5a3] hover:bg-[#3d2424] transition-colors rounded-sm shadow-lg">
+                <i data-lucide="help-circle" class="w-5 h-5"></i>
+            </button>
+            <div id="help-tooltip" class="hidden absolute top-16 left-4 bg-stone-900 border border-[#d4c5a3] p-4 w-64 text-xs font-typewriter z-50 shadow-xl animate-fade-in">
+                <p class="mb-2 text-emerald-400"><strong>MISSION:</strong> Unlock Swetha's investment history.</p>
+                <p>Solve the riddle in each file to reveal the underlying asset value.</p>
+            </div>
+        </div>
+        
+        <div class="flex gap-4">
+            <button onclick="skipCase()" class="flex items-center gap-2 text-xs font-typewriter hover:text-emerald-400 transition-colors uppercase tracking-widest bg-[#1a0f0f]/50 p-2 rounded backdrop-blur-sm">
+                <i data-lucide="fast-forward" class="w-4 h-4"></i> <span class="hidden md:inline">Skip Investigation</span>
+            </button>
+            <button class="opacity-50 hover:opacity-100 transition-opacity p-2">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="app-container" class="relative min-h-screen pt-24 pb-24 px-4 md:px-0 md:pl-20 md:pr-32 max-w-6xl mx-auto flex flex-col items-center">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Inventory Sidebar (Right) -->
+    <aside class="fixed bottom-0 left-0 right-0 md:top-0 md:left-auto md:right-0 md:h-full md:w-24 bg-[#0d0707] border-t md:border-t-0 md:border-l border-[#3d2424] z-20 flex md:flex-col items-center justify-start md:pt-24 gap-4 p-4 overflow-x-auto md:overflow-visible no-scrollbar">
+        <div class="hidden md:block absolute top-6 font-typewriter text-[10px] text-center w-full opacity-50 tracking-widest uppercase">
+            Evidence<br/>Locker
+        </div>
+        <div id="inventory-list" class="flex md:flex-col gap-4">
+            <!-- Inventory items injected via JS -->
+        </div>
+    </aside>
+
+    <!-- Modal: Question Lock -->
+    <div id="question-modal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
+        <div id="modal-content" class="bg-[#2c1a1a] border-2 border-[#d4c5a3] p-6 md:p-8 max-w-lg w-full rounded-sm shadow-2xl relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-[#d4c5a3] hover:text-white">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+
+            <div class="text-center mb-8 pt-4">
+                <h3 class="font-heading text-2xl text-[#d4c5a3] mb-4 border-b border-[#d4c5a3] pb-2 inline-block">SECURITY CHECK</h3>
+                <p id="modal-question" class="font-typewriter text-lg leading-relaxed text-[#e8e4d9]"></p>
+            </div>
+
+            <div id="modal-options" class="space-y-3">
+                <!-- Options injected via JS -->
+            </div>
+
+            <div id="modal-feedback" class="mt-6 text-center text-red-400 font-typewriter text-sm animate-pulse hidden"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- DATA ---
+        const CASE_DATA = [
+            {
+                id: 1,
+                title: "Initial Capital",
+                subtitle: "The Beginning",
+                lockedText: "Capital isn't always money. Some investments are made long before returns exist.",
+                question: "What was Swetha's first real investment?",
+                options: [
+                    { id: 'A', text: "Perfection" },
+                    { id: 'B', text: "Curiosity" },
+                    { id: 'C', text: "Comfort" }
+                ],
+                correctAnswer: 'B',
+                wrongFeedback: "The lock remains silent. This doesn't feel like the right key.",
+                unlockMessage: "Curiosity compounds faster than comfort.",
+                story: "Swetha didn't begin with confidence or certainty. She began with curiosity—choosing learning over ease.",
+                details: {
+                    type: "Bio",
+                    content: {
+                        Name: "Swetha Guru",
+                        Role: "Software Associate",
+                        Location: "Coimbatore, Tamil Nadu, India",
+                        Email: "swethaguru007@gmail.com",
+                        LinkedIn: "linkedin.com/in/swethaguru-36a98b1bb"
+                    }
+                },
+                inventoryIcon: "briefcase",
+                inventoryName: "Curiosity Token",
+                inventoryDesc: "The earliest form of capital."
+            },
+            {
+                id: 2,
+                title: "Foundations",
+                subtitle: "Academic Records",
+                lockedText: "Before skills, there were questions. Theory provides the map, but not the territory.",
+                question: "What kind of student was Swetha?",
+                options: [
+                    { id: 'A', text: "Topper in everything" },
+                    { id: 'B', text: "Curious but confused" },
+                    { id: 'C', text: "Always daydreaming" }
+                ],
+                correctAnswer: 'B',
+                wrongFeedback: "Impressive... but the file disagrees.",
+                unlockMessage: "Confusion is often the first sign of growth.",
+                story: "Swetha learned by asking, doubting, and exploring. Education wasn't smooth—but it was honest.",
+                details: {
+                    type: "Education",
+                    content: {
+                        Degree: "Bachelor's in Computer Science",
+                        Institution: "SNS Institutions",
+                        Duration: "June 2020 – April 2024",
+                        Note: "Graduated with questions, not just answers."
+                    }
+                },
+                inventoryIcon: "graduation-cap",
+                inventoryName: "Education Ledger",
+                inventoryDesc: "Questions recorded before answers existed."
+            },
+            {
+                id: 3,
+                title: "Market Reality",
+                subtitle: "Field Experience",
+                lockedText: "Theory meets production. The clean code of the classroom meets the chaos of the real world.",
+                question: "What shocked Swetha most about work life?",
+                options: [
+                    { id: 'A', text: "Bugs exist in production" },
+                    { id: 'B', text: "Code is never really finished" },
+                    { id: 'C', text: "Meetings have meetings" }
+                ],
+                correctAnswer: 'B',
+                wrongFeedback: "That happens often. But it's not the lesson.",
+                unlockMessage: "Software is alive. It never truly ends.",
+                story: "Work taught Swetha that systems grow, break, and improve continuously.",
+                details: {
+                    type: "Experience",
+                    content: [
+                        { role: "Software Associate", company: "SNS Square", loc: "Bangalore", time: "Sep 2025 – Present" },
+                        { role: "Junior Software Associate", company: "SNS iNNovation Hub", loc: "Coimbatore", time: "Aug 2024 – Sep 2025" }
+                    ]
+                },
+                inventoryIcon: "cpu",
+                inventoryName: "Experience File",
+                inventoryDesc: "Lessons learned under real pressure."
+            },
+            {
+                id: 4,
+                title: "Compounding",
+                subtitle: "Technical Skills",
+                lockedText: "No shortcuts. Only repetition. Value is built layer by layer.",
+                question: "How do skills actually grow?",
+                options: [
+                    { id: 'A', text: "Watching tutorials" },
+                    { id: 'B', text: "Practicing and failing" },
+                    { id: 'C', text: "Pretending confidence" }
+                ],
+                correctAnswer: 'B',
+                wrongFeedback: "This feels convincing. But it doesn't unlock anything.",
+                unlockMessage: "Growth hurts. That's how you know it's working.",
+                story: "Skills were built through failure, retrying, and patience.",
+                details: {
+                    type: "Skills",
+                    content: ["Java", "Debugging & Troubleshooting", "Clean Code Practices", "Problem Solving", "AI & Automation Basics"]
+                },
+                inventoryIcon: "zap",
+                inventoryName: "Skill Blueprint",
+                inventoryDesc: "Built by iteration, not shortcuts."
+            },
+            {
+                id: 5,
+                title: "Reinvestment",
+                subtitle: "Certifications",
+                lockedText: "Why reinvest time? The market evolves, and static capital depreciates.",
+                question: "Why did Swetha pursue certifications?",
+                options: [
+                    { id: 'A', text: "For display" },
+                    { id: 'B', text: "To deepen understanding" },
+                    { id: 'C', text: "For LinkedIn updates" }
+                ],
+                correctAnswer: 'B',
+                wrongFeedback: "That answer looks good. But it doesn't last long.",
+                unlockMessage: "Knowledge compounds better than badges.",
+                story: "Certifications were tools—not trophies.",
+                details: {
+                    type: "Certifications",
+                    content: [
+                        "Databricks Certified Generative AI Engineer – Associate",
+                        "IBM Enterprise Co-Creator",
+                        "Courses: Generative AI, AI Agents, Java Essentials"
+                    ]
+                },
+                inventoryIcon: "award",
+                inventoryName: "Certification Seal",
+                inventoryDesc: "Stamped proof of reinvestment."
+            }
+        ];
+
+        // --- STATE ---
+        let currentChapter = 0;
+        let isGameComplete = false;
+        let inventory = []; // Array of IDs
+        let chapterState = {
+            revealed: false
+        };
+
+        // --- DOM ELEMENTS ---
+        const appContainer = document.getElementById('app-container');
+        const inventoryList = document.getElementById('inventory-list');
+        const modal = document.getElementById('question-modal');
+        const modalContent = document.getElementById('modal-content');
+        const modalQuestion = document.getElementById('modal-question');
+        const modalOptions = document.getElementById('modal-options');
+        const modalFeedback = document.getElementById('modal-feedback');
+        const helpTooltip = document.getElementById('help-tooltip');
+
+        // --- INITIALIZATION ---
+        function init() {
+            // Check for chapter parameter in URL
+            const params = new URLSearchParams(window.location.search);
+            const chapterParam = params.get('chapter');
+            const revealedParam = params.get('revealed');
+            
+            if (chapterParam) {
+                currentChapter = parseInt(chapterParam);
+            }
+            
+            // Check if revealed parameter is passed (after correct answer)
+            if (revealedParam === 'true') {
+                chapterState.revealed = true;
+            } else {
+                chapterState.revealed = false;
+            }
+
+            renderChapter();
+            renderInventory();
+            lucide.createIcons();
+        }
+
+        // --- RENDER FUNCTIONS ---
+        function renderChapter() {
+            appContainer.innerHTML = ''; // Clear container
+
+            if (isGameComplete) {
+                appContainer.innerHTML = getFinalScreenHTML();
+                lucide.createIcons();
+                return;
+            }
+
+            const data = CASE_DATA[currentChapter];
+            
+            let html = `
+                <!-- Progress Indicator -->
+                <div class="mb-8 font-typewriter text-xs tracking-[0.3em] opacity-50 text-center">
+                    CASE FILE ${currentChapter + 1} OF ${CASE_DATA.length}
+                </div>
+
+                <!-- Folder Wrapper -->
+                <div class="relative w-full max-w-3xl perspective-1000">
+                    <div class="absolute -top-6 left-0 w-48 h-8 bg-[#c2b280] rounded-t-lg z-0 border-t border-l border-r border-black/20"></div>
+                    
+                    <div class="relative bg-[#e8e4d9] text-[#2c1a1a] p-6 md:p-12 rounded-lg paper-shadow min-h-[60vh] transition-all duration-700" id="case-folder">
+                        
+                        <!-- Stamp -->
+                        <div class="absolute top-8 right-8 w-24 h-24 border-4 border-red-900/30 rounded-full flex items-center justify-center transform rotate-12 pointer-events-none hidden md:flex">
+                            <span class="text-red-900/30 font-heading font-bold text-xs uppercase text-center leading-tight">CONFIDENTIAL<br/>PROPERTY OF<br/>SWETHA GURU</span>
+                        </div>
+
+                        <!-- Header -->
+                        <div class="border-b-2 border-[#2c1a1a] pb-6 mb-8">
+                            <h1 class="font-heading text-3xl md:text-5xl uppercase tracking-tighter mb-2 break-words">${data.title}</h1>
+                            <p class="font-typewriter text-xs md:text-sm uppercase tracking-widest opacity-70">REF: ${data.subtitle}</p>
+                        </div>
+
+                        <!-- Content Area -->
+                        <div id="chapter-content">
+                            ${!chapterState.revealed ? getLockedContentHTML(data) : getRevealedContentHTML(data)}
+                        </div>
+                    </div>
+                </div>
+
+                ${chapterState.revealed ? `
+                    <div class="mt-8 animate-bounce cursor-pointer pb-20 md:pb-0" onclick="nextChapter()">
+                        <div class="flex flex-col items-center gap-2 text-[#d4c5a3] opacity-80 hover:opacity-100 transition-opacity">
+                            <span class="font-typewriter text-xs uppercase tracking-widest bg-black/50 px-2 rounded">
+                                ${currentChapter < CASE_DATA.length - 1 ? "Next Case File" : "Close Investigation"}
+                            </span>
+                            <i data-lucide="chevron-down" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                ` : ''}
+            `;
+
+            appContainer.innerHTML = html;
+            lucide.createIcons();
+
+            // Start typewriter effect if revealed
+            if (chapterState.revealed) {
+                const storyEl = document.getElementById('typewriter-story');
+                if (storyEl) typeWriter(storyEl, data.story);
+            }
+        }
+
+        function getLockedContentHTML(data) {
+            return `
+                <div class="relative">
+                    <div class="blur-text font-typewriter text-lg leading-relaxed mb-8">
+                        ${data.story}
+                        <br/><br/>
+                        [REDACTED DATA SECTION]
+                        <br/>
+                        [ASSET VALUATION PENDING]
+                    </div>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center z-10">
+                        <p class="font-heading text-xl md:text-2xl mb-8 text-center max-w-md animate-flicker px-4">"${data.lockedText}"</p>
+                        <a href="storyboard.html?chapter=${currentChapter}" class="bg-[#2c1a1a] text-[#d4c5a3] px-8 py-3 rounded-sm font-heading text-xl hover:scale-105 transition-transform flex items-center gap-3 shadow-xl active:scale-95 no-underline">
+                            <i data-lucide="lock" class="w-5 h-5"></i> DECRYPT FILE
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getRevealedContentHTML(data) {
+            return `
+                <div class="animate-slide-up">
+                    <div class="flex items-center gap-3 text-emerald-700 mb-6 font-typewriter text-sm font-bold bg-emerald-100/50 p-2 inline-block rounded">
+                        <i data-lucide="unlock" class="w-4 h-4"></i> ACCESS GRANTED
+                    </div>
+                    
+                    <div class="font-serif text-lg md:text-xl leading-relaxed mb-8 border-l-4 border-[#2c1a1a] pl-6 italic">
+                        <span id="typewriter-story"></span>
+                    </div>
+
+                    <div class="bg-[#fff] p-6 shadow-md transform -rotate-1 relative max-w-md mx-auto border border-gray-200">
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-8 h-12 border-4 border-gray-400 rounded-full border-b-0"></div>
+                        <h3 class="font-heading text-xl border-b border-gray-300 pb-2 mb-4 uppercase">
+                            ${data.details.type} Record
+                        </h3>
+                        ${renderDetailsHTML(data.details)}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderDetailsHTML(details) {
+            if (Array.isArray(details.content)) {
+                if (details.type === "Experience") {
+                    return `
+                        <div class="space-y-4">
+                            ${details.content.map(job => `
+                                <div class="border-l-2 border-[#2c1a1a] pl-4">
+                                    <div class="font-bold text-lg">${job.role}</div>
+                                    <div class="font-typewriter text-sm">${job.company} | ${job.loc}</div>
+                                    <div class="text-xs italic opacity-75">${job.time}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+                return `
+                    <ul class="list-disc pl-5 font-handwriting text-xl space-y-1">
+                        ${details.content.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                `;
+            } else {
+                return `
+                    <div class="grid grid-cols-1 gap-2 font-typewriter text-sm break-words">
+                        ${Object.entries(details.content).map(([key, value]) => `
+                            <div>
+                                <span class="font-bold uppercase opacity-60">${key}:</span> <span class="text-[#2c1a1a]">${value}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+        }
+
+        function getFinalScreenHTML() {
+            return `
+                <div class="max-w-2xl w-full bg-[#e8e4d9] text-[#2c1a1a] p-8 md:p-12 rounded-sm paper-shadow transform rotate-1 relative animate-fade-in">
+                    <div class="absolute top-4 right-4 border-4 border-red-800 rounded-full w-24 h-24 flex items-center justify-center transform -rotate-12 opacity-80">
+                        <span class="text-red-800 font-heading font-bold text-lg">OPEN CASE</span>
+                    </div>
+                    
+                    <h2 class="font-heading text-4xl mb-6 border-b-2 border-[#2c1a1a] pb-4">INVESTIGATION SUMMARY</h2>
+                    
+                    <div class="font-typewriter text-left space-y-4 mb-8">
+                        <p><strong>SUBJECT:</strong> Swetha Guru</p>
+                        <p><strong>STATUS:</strong> Compounding Growth Confirmed</p>
+                        <p><strong>STRATEGY:</strong> Continuous Learning & Reinvestment</p>
+                        <div class="h-px bg-[#2c1a1a] w-full my-4 opacity-30"></div>
+                        <p class="text-lg">
+                            "Swetha isn't rushing outcomes. She's building value. 
+                            Unlike static code, her portfolio evolves with every challenge."
+                        </p>
+                    </div>
+
+                    <div class="flex flex-wrap gap-4 justify-center">
+                        <button onclick="resetGame()" class="px-6 py-3 bg-[#2c1a1a] text-[#d4c5a3] font-heading text-xl hover:bg-[#3d2424] transition-colors shadow-lg">
+                            REOPEN CASE FILE
+                        </button>
+                        <a href="mailto:swethaguru007@gmail.com" class="px-6 py-3 border-2 border-[#2c1a1a] text-[#2c1a1a] font-heading text-xl hover:bg-[#2c1a1a] hover:text-[#d4c5a3] transition-colors">
+                            CONTACT SUBJECT
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderInventory() {
+            inventoryList.innerHTML = CASE_DATA.map(chapter => {
+                const isUnlocked = inventory.includes(chapter.id);
+                return `
+                    <div class="group relative flex-shrink-0 w-12 h-12 mb-0 md:mb-4 border-2 rounded flex items-center justify-center transition-all duration-300 cursor-help ${isUnlocked ? 'border-[#d4c5a3] bg-[#2c1a1a] text-[#d4c5a3] shadow-[0_0_10px_rgba(212,197,163,0.3)]' : 'border-stone-700 bg-stone-900 text-stone-700'}">
+                        <i data-lucide="${isUnlocked ? chapter.inventoryIcon : 'lock'}" class="w-4 h-4"></i>
+                        <div class="absolute bottom-full md:bottom-auto md:right-14 md:top-0 w-48 p-3 bg-stone-900 border border-[#d4c5a3] text-[#d4c5a3] text-xs font-typewriter rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 mb-2 md:mb-0">
+                            <strong class="block mb-1 text-emerald-400">${isUnlocked ? chapter.inventoryName : "Unknown Item"}</strong>
+                            ${isUnlocked ? chapter.inventoryDesc : "Unlock chapter to acquire."}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        // --- ACTIONS ---
+        function toggleHelp() {
+            helpTooltip.classList.toggle('hidden');
+        }
+
+        function skipCase() {
+            isGameComplete = true;
+            renderChapter();
+        }
+
+        function nextChapter() {
+            if (currentChapter < CASE_DATA.length - 1) {
+                currentChapter++;
+                chapterState.revealed = false;
+                renderChapter();
+                window.scrollTo(0, 0);
+            } else {
+                isGameComplete = true;
+                renderChapter();
+            }
+        }
+
+        function resetGame() {
+            currentChapter = 0;
+            isGameComplete = false;
+            inventory = [];
+            chapterState.revealed = false;
+            renderChapter();
+            renderInventory();
+        }
+
+        // --- MODAL LOGIC ---
+        function openQuestionModal() {
+            const data = CASE_DATA[currentChapter];
+            modalQuestion.textContent = data.question;
+            modalFeedback.classList.add('hidden');
+            
+            modalOptions.innerHTML = data.options.map(opt => `
+                <button onclick="handleUnlockAttempt('${opt.id}')" class="w-full text-left p-4 border border-[#5c3a3a] bg-[#1a0f0f] text-[#d4c5a3] font-typewriter hover:bg-[#3d2424] hover:border-[#d4c5a3] transition-all flex items-center gap-4 group active:bg-[#d4c5a3] active:text-[#1a0f0f]">
+                    <span class="w-8 h-8 rounded-full border border-[#5c3a3a] flex items-center justify-center text-xs group-hover:border-[#d4c5a3] group-hover:bg-[#d4c5a3] group-hover:text-[#1a0f0f] shrink-0">
+                        ${opt.id}
+                    </span>
+                    ${opt.text}
+                </button>
+            `).join('');
+            
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+        }
+
+        function handleUnlockAttempt(optionId) {
+            const data = CASE_DATA[currentChapter];
+            
+            if (optionId === data.correctAnswer) {
+                // Success
+                closeModal();
+                chapterState.revealed = true;
+                if (!inventory.includes(data.id)) {
+                    inventory.push(data.id);
+                    renderInventory();
+                }
+                renderChapter();
+            } else {
+                // Failure
+                modalFeedback.textContent = `[ERROR]: ${data.wrongFeedback}`;
+                modalFeedback.classList.remove('hidden');
+                
+                // Shake animation
+                modalContent.classList.add('animate-shake');
+                setTimeout(() => {
+                    modalContent.classList.remove('animate-shake');
+                }, 500);
+            }
+        }
+
+        // --- TYPEWRITER UTILITY ---
+        function typeWriter(element, text, speed = 30) {
+            let i = 0;
+            element.textContent = '';
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // --- START ---
+        init();
+
+    </script>
+</body>
+</html>
