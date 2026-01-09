@@ -154,16 +154,20 @@
             {
                 id: 1,
                 title: "Initial Capital",
-                subtitle: "The Beginning",
-                lockedText: "Capital isn't always money. Some investments are made long before returns exist.",
-                question: "What was Swetha's first real investment?",
+                subtitle: "Meet Swetha",
+                lockedText: "The first investment was curiosity.",
+                question: "What defined Swetha's beginning the most?",
                 options: [
-                    { id: 'A', text: "Perfection" },
+                    { id: 'A', text: "Confidence" },
                     { id: 'B', text: "Curiosity" },
-                    { id: 'C', text: "Comfort" }
+                    { id: 'C', text: "Certainty" }
                 ],
                 correctAnswer: 'B',
-                wrongFeedback: "The lock remains silent. This doesn't feel like the right key.",
+                feedback: {
+                    'A': "😏 Confidence? At the start?\nBold assumption. Wrong timeline.",
+                    'B': "😌 Correct. Curiosity walked in quietly and carried the whole story.",
+                    'C': "😬 Certainty this early?\nThat's how boring stories are born."
+                },
                 unlockMessage: "Curiosity compounds faster than comfort.",
                 story: "Swetha didn't begin with confidence or certainty. She began with curiosity—choosing learning over ease.",
                 details: {
@@ -183,16 +187,20 @@
             {
                 id: 2,
                 title: "Foundations",
-                subtitle: "Academic Records",
+                subtitle: "A Curious Little Girl",
                 lockedText: "Before skills, there were questions. Theory provides the map, but not the territory.",
-                question: "What kind of student was Swetha?",
+                question: "What did Swetha really enjoy drawing?",
                 options: [
-                    { id: 'A', text: "Topper in everything" },
-                    { id: 'B', text: "Curious but confused" },
-                    { id: 'C', text: "Always daydreaming" }
+                    { id: 'A', text: "Perfect shapes" },
+                    { id: 'B', text: "Random doodles" },
+                    { id: 'C', text: "Ideas" }
                 ],
-                correctAnswer: 'B',
-                wrongFeedback: "Impressive... but the file disagrees.",
+                correctAnswer: 'C',
+                feedback: {
+                    'A': "📐 Relax. This isn't a math textbook.",
+                    'B': "✏️ Chaos, but with purpose. Almost.",
+                    'C': "🧠 Correct. Ideas don't stay inside lines."
+                },
                 unlockMessage: "Confusion is often the first sign of growth.",
                 story: "Swetha learned by asking, doubting, and exploring. Education wasn't smooth—but it was honest.",
                 details: {
@@ -211,16 +219,20 @@
             {
                 id: 3,
                 title: "Market Reality",
-                subtitle: "Field Experience",
+                subtitle: "Stepping Into the Real World",
                 lockedText: "Theory meets production. The clean code of the classroom meets the chaos of the real world.",
-                question: "What shocked Swetha most about work life?",
+                question: "What surprised Swetha most about real work?",
                 options: [
-                    { id: 'A', text: "Bugs exist in production" },
-                    { id: 'B', text: "Code is never really finished" },
-                    { id: 'C', text: "Meetings have meetings" }
+                    { id: 'A', text: "Plans always change" },
+                    { id: 'B', text: "Bugs appear magically" },
+                    { id: 'C', text: "Mistakes teach more than books" }
                 ],
-                correctAnswer: 'B',
-                wrongFeedback: "That happens often. But it's not the lesson.",
+                correctAnswer: 'C',
+                feedback: {
+                    'A': "🔄 Plans change more than passwords.",
+                    'B': "🐛 Bugs smell confidence. You'll learn.",
+                    'C': "😎 Painful? Yes.\nEducational? Extremely."
+                },
                 unlockMessage: "Software is alive. It never truly ends.",
                 story: "Work taught Swetha that systems grow, break, and improve continuously.",
                 details: {
@@ -237,16 +249,20 @@
             {
                 id: 4,
                 title: "Compounding",
-                subtitle: "Technical Skills",
+                subtitle: "Skills Along the Way",
                 lockedText: "No shortcuts. Only repetition. Value is built layer by layer.",
-                question: "How do skills actually grow?",
+                question: "How did Swetha build her skills?",
                 options: [
-                    { id: 'A', text: "Watching tutorials" },
-                    { id: 'B', text: "Practicing and failing" },
-                    { id: 'C', text: "Pretending confidence" }
+                    { id: 'A', text: "Getting everything right" },
+                    { id: 'B', text: "Failing once and moving on" },
+                    { id: 'C', text: "Trying, failing, fixing, repeating" }
                 ],
-                correctAnswer: 'B',
-                wrongFeedback: "This feels convincing. But it doesn't unlock anything.",
+                correctAnswer: 'C',
+                feedback: {
+                    'A': "🤨 That's not growth. That's fiction.",
+                    'B': "😅 Growth needs commitment, not speed dating.",
+                    'C': "🔁 Congratulations. You understand reality."
+                },
                 unlockMessage: "Growth hurts. That's how you know it's working.",
                 story: "Skills were built through failure, retrying, and patience.",
                 details: {
@@ -260,16 +276,20 @@
             {
                 id: 5,
                 title: "Reinvestment",
-                subtitle: "Certifications",
+                subtitle: "Lessons Beyond Books",
                 lockedText: "Why reinvest time? The market evolves, and static capital depreciates.",
-                question: "Why did Swetha pursue certifications?",
+                question: "Why did Swetha keep learning after work?",
                 options: [
-                    { id: 'A', text: "For display" },
-                    { id: 'B', text: "To deepen understanding" },
-                    { id: 'C', text: "For LinkedIn updates" }
+                    { id: 'A', text: "For certificates" },
+                    { id: 'B', text: "Curiosity wouldn't sleep" },
+                    { id: 'C', text: "To stay busy" }
                 ],
                 correctAnswer: 'B',
-                wrongFeedback: "That answer looks good. But it doesn't last long.",
+                feedback: {
+                    'A': "📜 Nice decoration. Learning sold separately.",
+                    'B': "🌙 Correct. Curiosity has insomnia. Deal with it.",
+                    'C': "😴 Busy isn't impressive. Learning is."
+                },
                 unlockMessage: "Knowledge compounds better than badges.",
                 story: "Certifications were tools—not trophies.",
                 details: {
@@ -283,6 +303,37 @@
                 inventoryIcon: "award",
                 inventoryName: "Certification Seal",
                 inventoryDesc: "Stamped proof of reinvestment."
+            },
+            {
+                id: 6,
+                title: "The Engineer",
+                subtitle: "She Is Becoming",
+                lockedText: "Becoming isn't a finish line; it's a direction.",
+                question: "What choice defines Swetha today?",
+                options: [
+                    { id: 'A', text: "Speed over meaning" },
+                    { id: 'B', text: "Perfection over progress" },
+                    { id: 'C', text: "Understanding over shortcuts" }
+                ],
+                correctAnswer: 'C',
+                feedback: {
+                    'A': "⚡ Fast and wrong is still wrong.",
+                    'B': "🧩 Perfection is just procrastination in a suit.",
+                    'C': "🧠 Correct. Mature choice. Engineer unlocked."
+                },
+                unlockMessage: "Curiosity over ego. Meaning over speed.",
+                story: "Today, Swetha stands at a calm place in her story. She doesn’t rush to code. She thinks first. She designs gently. She builds with care. She knows she isn’t perfect—and no longer tries to be. Instead, she chooses meaning over speed, understanding over shortcuts, and curiosity over ego. This story doesn’t end here. Because Swetha is still becoming—an engineer who learns, builds, and keeps asking better questions. And perhaps… that’s the best kind of ending a story can have.",
+                details: {
+                    type: "Outlook",
+                    content: {
+                        Focus: "Meaning over speed",
+                        Principle: "Understanding over shortcuts",
+                        Mindset: "Curiosity over ego"
+                    }
+                },
+                inventoryIcon: "compass",
+                inventoryName: "Becoming Compass",
+                inventoryDesc: "Points toward growth, not perfection."
             }
         ];
 
@@ -313,11 +364,19 @@
             
             if (chapterParam) {
                 currentChapter = parseInt(chapterParam);
+                // Bounds check: ensure chapter is within valid range (0-5)
+                if (currentChapter < 0) currentChapter = 0;
+                if (currentChapter >= CASE_DATA.length) currentChapter = CASE_DATA.length - 1;
             }
             
             // Check if revealed parameter is passed (after correct answer)
             if (revealedParam === 'true') {
                 chapterState.revealed = true;
+                // Add to inventory when revealed
+                const data = CASE_DATA[currentChapter];
+                if (data && !inventory.includes(data.id)) {
+                    inventory.push(data.id);
+                }
             } else {
                 chapterState.revealed = false;
             }
@@ -325,6 +384,9 @@
             renderChapter();
             renderInventory();
             lucide.createIcons();
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
         }
 
         // --- RENDER FUNCTIONS ---
@@ -338,6 +400,14 @@
             }
 
             const data = CASE_DATA[currentChapter];
+            
+            // Safety check: if data is undefined, show error or reset
+            if (!data) {
+                console.error('Invalid chapter:', currentChapter);
+                currentChapter = 0;
+                chapterState.revealed = false;
+                return renderChapter();
+            }
             
             let html = `
                 <!-- Progress Indicator -->
@@ -569,20 +639,30 @@
 
         function handleUnlockAttempt(optionId) {
             const data = CASE_DATA[currentChapter];
+            const feedbackMessage = data.feedback ? data.feedback[optionId] : (optionId === data.correctAnswer ? data.unlockMessage : data.wrongFeedback);
             
             if (optionId === data.correctAnswer) {
                 // Success
-                closeModal();
-                chapterState.revealed = true;
-                if (!inventory.includes(data.id)) {
-                    inventory.push(data.id);
-                    renderInventory();
-                }
-                renderChapter();
+                modalFeedback.textContent = feedbackMessage;
+                modalFeedback.classList.remove('hidden');
+                modalFeedback.classList.add('text-emerald-400');
+                modalFeedback.classList.remove('text-red-400');
+                
+                setTimeout(() => {
+                    closeModal();
+                    chapterState.revealed = true;
+                    if (!inventory.includes(data.id)) {
+                        inventory.push(data.id);
+                        renderInventory();
+                    }
+                    renderChapter();
+                }, 1500);
             } else {
                 // Failure
-                modalFeedback.textContent = `[ERROR]: ${data.wrongFeedback}`;
+                modalFeedback.textContent = feedbackMessage;
                 modalFeedback.classList.remove('hidden');
+                modalFeedback.classList.add('text-red-400');
+                modalFeedback.classList.remove('text-emerald-400');
                 
                 // Shake animation
                 modalContent.classList.add('animate-shake');
