@@ -22,6 +22,21 @@
         .font-heading { font-family: 'Special Elite', cursive; }
         .font-handwriting { font-family: 'Caveat', cursive; }
 
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .mode-main {
+            background-color: #1a0f0f;
+            color: #d4c5a3;
+        }
+
+        .mode-storyboard {
+            background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+            color: #d4c5a3;
+        }
+
         /* Grain Texture */
         .bg-grain {
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
@@ -52,29 +67,36 @@
             animation: fadeIn 1s ease-out forwards;
         }
         
+        .animate-fade-out {
+            animation: fadeOut 0.4s ease-in forwards;
+        }
+        
         .animate-slide-up {
             animation: slideUp 0.7s ease-out forwards;
         }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { transform: translateY(1rem); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeOut { 
+            from { opacity: 1; } 
+            to { opacity: 0; } 
+        }
+        @keyframes fadeIn { 
+            from { opacity: 0; } 
+            to { opacity: 1; } 
+        }
+        @keyframes slideUp { 
+            from { transform: translateY(1rem); opacity: 0; } 
+            to { transform: translateY(0); opacity: 1; } 
+        }
 
         .paper-shadow {
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
         }
 
         /* Scrollbar hiding */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        .perspective-1000 {
-            perspective: 1000px;
-        }
+        .perspective-1000 { perspective: 1000px; }
 
         /* Blur Utility */
         .blur-text {
@@ -82,72 +104,187 @@
             user-select: none;
             opacity: 0.5;
         }
+
+        /* Question modal styling (from question.html) */
+        .security-modal {
+            background: rgba(44, 26, 26, 0.95);
+            border: 3px solid #d4a574;
+            border-radius: 8px;
+            padding: 60px 50px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+            position: relative;
+        }
+        .modal-title {
+            font-family: 'Courier Prime', monospace;
+            font-size: 32px;
+            letter-spacing: 4px;
+            color: #d4a574;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .modal-divider { height: 2px; background: #d4a574; margin: 20px 0 40px 0; }
+        .modal-question { font-family: 'Courier Prime', monospace; color: #d4c5a3; font-size: 18px; text-align: center; margin-bottom: 40px; line-height: 1.6; }
+        .option-button {
+            width: 100%;
+            padding: 18px 20px;
+            margin-bottom: 20px;
+            border: 2px solid #5c3a3a;
+            background: #1a0f0f;
+            color: #d4a574;
+            font-family: 'Courier Prime', monospace;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-radius: 4px;
+        }
+        .option-button:hover { background: #3d2424; border-color: #d4a574; transform: translateX(5px); }
+        .option-button:active { background: #d4a574; color: #1a0f0f; transform: translateX(3px); }
+        .option-letter {
+            display: flex; align-items: center; justify-content: center;
+            width: 35px; height: 35px; border: 2px solid #d4a574; border-radius: 50%; font-weight: bold; flex-shrink: 0;
+        }
+        .option-button:hover .option-letter { background: #d4a574; color: #1a0f0f; }
+        .feedback-message { font-family: 'Courier Prime', monospace; margin-top: 20px; padding: 15px; border-radius: 4px; text-align: center; font-weight: bold; display: none; }
+        .feedback-correct { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 2px solid #10b981; }
+        .feedback-incorrect { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 2px solid #ef4444; }
+
+        /* Storyboard styles */
+        .storyboard-container { height: 100vh; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; max-width: 100%; box-sizing: border-box; }
+        .story-content { display: flex; gap: 20px; flex: 1; margin-top: 0; width: 100%; height: 100%; box-sizing: border-box; }
+        .left-box { flex: 0 0 30%; background: #e8dcc8; border: 4px solid #4a3428; border-radius: 8px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); overflow: hidden; display: flex; align-items: stretch; justify-content: center; }
+        .video-fill { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; background: #f1e7d3; }
+        .right-box { flex: 0 0 70%; display: flex; flex-direction: column; gap: 12px; }
+        .story-panel { flex: 1 1 auto; background: #e8dcc8; border: 4px solid #4a3428; border-radius: 8px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); padding: 20px; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
+        .story-panel .story-body { flex: 1; overflow-y: auto; }
+        .story-box::-webkit-scrollbar { width: 8px; }
+        .story-box::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.1); }
+        .story-box::-webkit-scrollbar-thumb { background: #8b6f47; border-radius: 4px; }
+        .story-title { font-size: 18px; font-weight: bold; color: #2c1a1a; text-align: center; border-bottom: 2px solid #4a3428; padding-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .story-subtitle { font-family: 'Courier Prime', monospace; font-size: 12px; color: #4a3428; text-align: center; letter-spacing: 2px; margin-top: 6px; text-transform: uppercase; }
+        .story-text { font-family: 'Courier Prime', monospace; color: #3c2c1c; font-size: 17px; line-height: 1.7; text-align: left; }
+        .story-text strong { color: #2c1a1a; font-weight: bold; }
+        .question-box { background: #e8dcc8; border: 4px solid #4a3428; border-radius: 8px; padding: 20px; width: 100%; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); flex: 1 1 auto; display: flex; flex-direction: column; }
+        .question-title { font-family: 'Courier Prime', monospace; font-size: 18px; font-weight: bold; color: #2c1a1a; text-align: center; border-bottom: 2px solid #4a3428; padding-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .question-divider { height: 2px; background: #4a3428; margin: 8px 0 15px 0; }
+        .question-text { font-family: 'Courier Prime', monospace; color: #3c2c1c; font-size: 15px; text-align: center; margin-bottom: 15px; line-height: 1.5; }
+        .options-container { display: flex; flex-direction: row; gap: 15px; margin-bottom: 20px; justify-content: center; flex-wrap: wrap; }
+        .option-btn { flex: 1; min-width: 150px; padding: 12px 16px; border: 2px solid #4a3428; background: #d4c5a3; color: #2c1a1a; font-family: 'Courier Prime', monospace; font-size: 14px; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; border-radius: 4px; }
+        .option-btn:hover { background: #c4b555; border-color: #8b6f47; transform: scale(1.05); }
+        .option-btn:active { background: #d4a574; color: #1a0f0f; transform: scale(0.95); }
+        .option-btn .option-letter { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: 2px solid #4a3428; border-radius: 50%; font-weight: bold; flex-shrink: 0; color: #2c1a1a; }
+        .option-btn:hover .option-letter { background: #d4a574; color: #1a0f0f; }
+        .feedback-correct { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 2px solid #10b981; }
+        .feedback-incorrect { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 2px solid #ef4444; }
     </style>
 </head>
-<body class="min-h-screen bg-[#1a0f0f] text-[#d4c5a3] font-sans overflow-x-hidden relative selection:bg-emerald-900 selection:text-white">
+<body class="mode-main text-[#d4c5a3] font-sans relative selection:bg-emerald-900 selection:text-white">
 
-    <!-- Global Texture Overlays -->
-    <div class="fixed inset-0 pointer-events-none bg-grain z-50"></div>
-    <div class="fixed inset-0 pointer-events-none z-40 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)]"></div>
+    <!-- MAIN VIEW -->
+    <div id="main-view">
+        <!-- Global Texture Overlays -->
+        <div class="fixed inset-0 pointer-events-none bg-grain z-50"></div>
+        <div class="fixed inset-0 pointer-events-none z-40 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)]"></div>
 
-    <!-- Header UI -->
-    <header class="fixed top-0 left-0 right-0 z-30 p-4 flex justify-between items-start pointer-events-auto bg-gradient-to-b from-[#1a0f0f] to-transparent md:bg-none">
-        <div class="relative flex gap-4">
-            <button onclick="toggleHelp()" class="p-2 bg-[#2c1a1a] border border-[#d4c5a3] hover:bg-[#3d2424] transition-colors rounded-sm shadow-lg">
-                <i data-lucide="help-circle" class="w-5 h-5"></i>
-            </button>
-            <div id="help-tooltip" class="hidden absolute top-16 left-4 bg-stone-900 border border-[#d4c5a3] p-4 w-64 text-xs font-typewriter z-50 shadow-xl animate-fade-in">
-                <p class="mb-2 text-emerald-400"><strong>MISSION:</strong> Unlock Swetha's investment history.</p>
-                <p>Solve the riddle in each file to reveal the underlying asset value.</p>
+        <!-- Header UI -->
+        <header class="fixed top-0 left-0 right-0 z-30 p-4 flex justify-between items-start pointer-events-auto bg-gradient-to-b from-[#1a0f0f] to-transparent md:bg-none">
+            <div class="relative flex gap-4">
+                <button onclick="toggleHelp()" class="p-2 bg-[#2c1a1a] border border-[#d4c5a3] hover:bg-[#3d2424] transition-colors rounded-sm shadow-lg">
+                    <i data-lucide="help-circle" class="w-5 h-5"></i>
+                </button>
+                <div id="help-tooltip" class="hidden absolute top-16 left-4 bg-stone-900 border border-[#d4c5a3] p-4 w-64 text-xs font-typewriter z-50 shadow-xl animate-fade-in">
+                    <p class="mb-2 text-emerald-400"><strong>MISSION:</strong> Unlock Swetha's investment history.</p>
+                    <p>Solve the riddle in each file to reveal the underlying asset value.</p>
+                </div>
             </div>
-        </div>
-        
-        <div class="flex gap-4">
-            <button onclick="skipCase()" class="flex items-center gap-2 text-xs font-typewriter hover:text-emerald-400 transition-colors uppercase tracking-widest bg-[#1a0f0f]/50 p-2 rounded backdrop-blur-sm">
-                <i data-lucide="fast-forward" class="w-4 h-4"></i> <span class="hidden md:inline">Skip Investigation</span>
-            </button>
-            <button class="opacity-50 hover:opacity-100 transition-opacity p-2">
-                <i data-lucide="settings" class="w-5 h-5"></i>
-            </button>
-        </div>
-    </header>
-
-    <!-- Main Content Area -->
-    <main id="app-container" class="relative min-h-screen pt-24 pb-24 px-4 md:px-0 md:pl-20 md:pr-32 max-w-6xl mx-auto flex flex-col items-center">
-        <!-- Content injected via JS -->
-    </main>
-
-    <!-- Inventory Sidebar (Right) -->
-    <aside class="fixed bottom-0 left-0 right-0 md:top-0 md:left-auto md:right-0 md:h-full md:w-24 bg-[#0d0707] border-t md:border-t-0 md:border-l border-[#3d2424] z-20 flex md:flex-col items-center justify-start md:pt-24 gap-4 p-4 overflow-x-auto md:overflow-visible no-scrollbar">
-        <div class="hidden md:block absolute top-6 font-typewriter text-[10px] text-center w-full opacity-50 tracking-widest uppercase">
-            Evidence<br/>Locker
-        </div>
-        <div id="inventory-list" class="flex md:flex-col gap-4">
-            <!-- Inventory items injected via JS -->
-        </div>
-    </aside>
-
-    <!-- Modal: Question Lock -->
-    <div id="question-modal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
-        <div id="modal-content" class="bg-[#2c1a1a] border-2 border-[#d4c5a3] p-6 md:p-8 max-w-lg w-full rounded-sm shadow-2xl relative">
-            <button onclick="closeModal()" class="absolute top-4 right-4 text-[#d4c5a3] hover:text-white">
-                <i data-lucide="x" class="w-6 h-6"></i>
-            </button>
-
-            <div class="text-center mb-8 pt-4">
-                <h3 class="font-heading text-2xl text-[#d4c5a3] mb-4 border-b border-[#d4c5a3] pb-2 inline-block">SECURITY CHECK</h3>
-                <p id="modal-question" class="font-typewriter text-lg leading-relaxed text-[#e8e4d9]"></p>
+            
+            <div class="flex gap-4">
+                <button onclick="skipCase()" class="flex items-center gap-2 text-xs font-typewriter hover:text-emerald-400 transition-colors uppercase tracking-widest bg-[#1a0f0f]/50 p-2 rounded backdrop-blur-sm">
+                    <i data-lucide="fast-forward" class="w-4 h-4"></i> <span class="hidden md:inline">Skip Investigation</span>
+                </button>
+                <button class="opacity-50 hover:opacity-100 transition-opacity p-2">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                </button>
             </div>
+        </header>
 
-            <div id="modal-options" class="space-y-3">
-                <!-- Options injected via JS -->
+        <!-- Main Content Area -->
+        <main id="app-container" class="relative min-h-screen pt-24 pb-24 px-4 md:px-0 md:pl-20 md:pr-32 max-w-6xl mx-auto flex flex-col items-center">
+            <!-- Content injected via JS -->
+        </main>
+
+        <!-- Inventory Sidebar (Right) -->
+        <aside class="fixed bottom-0 left-0 right-0 md:top-0 md:left-auto md:right-0 md:h-full md:w-24 bg-[#0d0707] border-t md:border-t-0 md:border-l border-[#3d2424] z-20 flex md:flex-col items-center justify-start md:pt-24 gap-4 p-4 overflow-x-auto md:overflow-visible no-scrollbar">
+            <div class="hidden md:block absolute top-6 font-typewriter text-[10px] text-center w-full opacity-50 tracking-widest uppercase">
+                Evidence<br/>Locker
             </div>
+            <div id="inventory-list" class="flex md:flex-col gap-4">
+                <!-- Inventory items injected via JS -->
+            </div>
+        </aside>
 
-            <div id="modal-feedback" class="mt-6 text-center text-red-400 font-typewriter text-sm animate-pulse hidden"></div>
+        <!-- Modal: Question Lock -->
+        <div id="question-modal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in">
+            <div id="modal-content" class="bg-[#2c1a1a] border-2 border-[#d4c5a3] p-6 md:p-8 max-w-lg w-full rounded-sm shadow-2xl relative">
+                <button onclick="closeModal()" class="absolute top-4 right-4 text-[#d4c5a3] hover:text-white">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+
+                <div class="text-center mb-8 pt-4">
+                    <h3 class="font-heading text-2xl text-[#d4c5a3] mb-4 border-b border-[#d4c5a3] pb-2 inline-block">SECURITY CHECK</h3>
+                    <p id="modal-question" class="font-typewriter text-lg leading-relaxed text-[#e8e4d9]"></p>
+                </div>
+
+                <div id="modal-options" class="space-y-3">
+                    <!-- Options injected via JS -->
+                </div>
+
+                <div id="modal-feedback" class="mt-6 text-center text-red-400 font-typewriter text-sm animate-pulse hidden"></div>
+            </div>
         </div>
     </div>
 
-    <!-- JavaScript Logic -->
+    <!-- STORYBOARD VIEW -->
+    <div id="storyboard-view" class="hidden">
+        <!-- Global Texture Overlays -->
+        <div class="fixed inset-0 pointer-events-none bg-grain z-50"></div>
+        <div class="fixed inset-0 pointer-events-none z-40 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.5)_100%)]"></div>
+
+        <div class="storyboard-container animate-fade-in">
+            <div class="story-content">
+                <!-- Left: 30% full-height Video -->
+                <div class="left-box">
+                    <video id="storyVideo" class="video-fill" src="swetha.mp4" autoplay muted loop playsinline></video>
+                </div>
+
+                <!-- Right: 70% split vertically 60/40 -->
+                <div class="right-box">
+                    <div class="story-panel">
+                        <div class="story-title">Initial Capital</div>
+                        <div class="story-subtitle">REF: The Beginning</div>
+                        <div id="storyBody" class="story-body story-text"></div>
+                        <button id="continueBtn" style="display:none; margin-top:12px; align-self:flex-start; background:#2c1a1a; color:#d4c5a3; border:2px solid #4a3428; padding:10px 16px; font-family:'Courier Prime', monospace; font-weight:bold; letter-spacing:1px; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.4);">CONTINUE</button>
+                    </div>
+
+                    <div class="question-box" id="storyQuestionBox" style="display:none;">
+                        <div class="question-title">SECURITY CHECK</div>
+                        <div class="question-divider"></div>
+                        <div class="question-text" id="storyQuestionText"></div>
+                        
+                        <div class="options-container" id="storyOptionsContainer"></div>
+
+                        <div id="storyFeedbackMessage" class="feedback-message"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // --- DATA ---
         const CASE_DATA = [
@@ -337,13 +474,185 @@
             }
         ];
 
+        // Storyboard chapters
+        const CHAPTERS = [
+            {
+                num: 0,
+                title: "INITIAL CAPITAL",
+                subtitle: "REF: THE BEGINNING",
+                html: `<p>Once upon a time, not very far away, there lived a girl named Swetha.</p>
+                       <p>She didn't arrive with loud announcements or grand speeches.</p>
+                       <p>She arrived with a quiet curiosity, the kind that sits patiently and observes before asking questions.</p>
+                       <p>Swetha always seemed to be thinking.</p>
+                       <p>Not because she knew everything—<br/>but because she wanted to.</p>
+                       <p>Some stories begin with confidence.</p>
+                       <p>This one begins with curiosity…<br/>which, if we're honest, causes far more adventures.</p>`
+            },
+            {
+                num: 1,
+                title: "THE CURIOUS MIND",
+                subtitle: "REF: EARLY DISCOVERIES",
+                html: `<p>Long before code and screens, there was a little girl with a pencil.</p>
+                       <p>Swetha loved to draw—<br/>not just shapes, but ideas.</p>
+                       <p>She asked "why" often enough that adults learned to sigh creatively.</p>
+                       <p>School taught her lessons,<br/>but curiosity taught her more.</p>
+                       <p>While rules explained what to do,<br/>her questions explored what if.</p>
+                       <p>And somewhere between notebooks, drawings, and wondering minds,<br/>a quiet thought began to form:</p>
+                       <p>"I want to understand how things work."</p>
+                       <p>Stories usually start exactly like this—<br/>softly, without anyone noticing.</p>`
+            },
+            {
+                num: 2,
+                title: "COLLISION WITH REALITY",
+                subtitle: "REF: PROFESSIONAL ENTRY",
+                html: `<p>Then one day, the real world knocked.</p>
+                       <p>It didn't ask politely.</p>
+                       <p>Work arrived with deadlines, meetings, and bugs that appeared without warning—<br/>especially when everything seemed fine five minutes ago.</p>
+                       <p>Swetha learned quickly that<br/>real work doesn't follow textbooks,<br/>and plans often change their minds.</p>
+                       <p>Mistakes became frequent visitors.<br/>Some stayed longer than welcome.</p>
+                       <p>But instead of being afraid,<br/>Swetha listened.</p>
+                       <p>Because every mistake had something to say—<br/>and she was finally fluent enough to hear it.</p>`
+            },
+            {
+                num: 3,
+                title: "THE CRAFT EMERGES",
+                subtitle: "REF: SKILL DEVELOPMENT",
+                html: `<p>Skills did not appear overnight.<br/>They arrived slowly…<br/>sometimes disguised as frustration.</p>
+                       <p>Swetha tried.<br/>Failed.<br/>Fixed.<br/>Tried again.</p>
+                       <p>She learned that understanding mattered more than speed,<br/>and patience mattered more than cleverness.</p>
+                       <p>Some lessons came from practice.<br/>Others came from watching quietly.<br/>A few came from doing everything wrong once.</p>
+                       <p>But each time, she picked up something new—<br/>not just skills,<br/>but confidence.</p>
+                       <p>The story was no longer about getting things right.<br/>It was about getting better.</p>`
+            },
+            {
+                num: 4,
+                title: "CONTINUOUS LEARNING",
+                subtitle: "REF: BEYOND THE BASICS",
+                html: `<p>Even after long days,<br/>Swetha kept learning.</p>
+                       <p>Not because she had to—<br/>but because curiosity refused to sleep.</p>
+                       <p>She explored ideas beyond her work,<br/>collected lessons from courses,<br/>and discovered joy in understanding things more deeply.</p>
+                       <p>Certificates appeared along the way—<br/>some shiny, some quiet.</p>
+                       <p>But the real reward was clarity.<br/>Each new concept made the world feel a little less confusing.</p>
+                       <p>Learning, she realized,<br/>was not a phase.<br/>It was a companion.</p>`
+            },
+            {
+                num: 5,
+                title: "THE ENGINEER REALIZED",
+                subtitle: "REF: PRESENT MASTERY",
+                html: `<p>Still curious.</p>
+                      <p>Still learning.</p>
+                      <p>Still asking questions.</p>
+                      <p></p>
+                      <p>This is me.</p>
+                      <p>This is my story.</p>`
+            },
+            {
+                num: 6,
+                title: "THE ENGINEER SHE IS BECOMING",
+                subtitle: "REF: THE NEXT CHAPTER",
+                html: `<p>Still curious.</p>
+                      <p>Still learning.</p>
+                      <p>Still asking questions.</p>
+                      <p></p>
+                      <p>This is me.</p>
+                      <p>This is my story.</p>`
+            }
+        ];
+
+        // Storyboard questions
+        const STORYBOARD_QUESTIONS = [
+            {
+                text: "What defined Swetha's beginning the most?",
+                options: [
+                    { id: 'A', text: 'Confidence' },
+                    { id: 'B', text: 'Curiosity' },
+                    { id: 'C', text: 'Certainty' }
+                ],
+                correct: 'B',
+                feedback: {
+                    'A': "😏 Confidence? At the start?\nBold assumption. Wrong timeline.",
+                    'B': "😌 Correct. Curiosity walked in quietly and carried the whole story.",
+                    'C': "😬 Certainty this early?\nThat's how boring stories are born."
+                }
+            },
+            {
+                text: "What did Swetha really enjoy drawing?",
+                options: [
+                    { id: 'A', text: 'Perfect shapes' },
+                    { id: 'B', text: 'Random doodles' },
+                    { id: 'C', text: 'Ideas' }
+                ],
+                correct: 'C',
+                feedback: {
+                    'A': "📐 Relax. This isn't a math textbook.",
+                    'B': "✏️ Chaos, but with purpose. Almost.",
+                    'C': "🧠 Correct. Ideas don't stay inside lines."
+                }
+            },
+            {
+                text: "What surprised Swetha most about real work?",
+                options: [
+                    { id: 'A', text: 'Plans always change' },
+                    { id: 'B', text: 'Bugs appear magically' },
+                    { id: 'C', text: 'Mistakes teach more than books' }
+                ],
+                correct: 'C',
+                feedback: {
+                    'A': "🔄 Plans change more than passwords.",
+                    'B': "🐛 Bugs smell confidence. You'll learn.",
+                    'C': "😎 Painful? Yes.\nEducational? Extremely."
+                }
+            },
+            {
+                text: "How did Swetha build her skills?",
+                options: [
+                    { id: 'A', text: 'Getting everything right' },
+                    { id: 'B', text: 'Failing once and moving on' },
+                    { id: 'C', text: 'Trying, failing, fixing, repeating' }
+                ],
+                correct: 'C',
+                feedback: {
+                    'A': "🤨 That's not growth. That's fiction.",
+                    'B': "😅 Growth needs commitment, not speed dating.",
+                    'C': "🔁 Congratulations. You understand reality."
+                }
+            },
+            {
+                text: "Why did Swetha keep learning after work?",
+                options: [
+                    { id: 'A', text: 'For certificates' },
+                    { id: 'B', text: 'Curiosity wouldn\'t sleep' },
+                    { id: 'C', text: 'To stay busy' }
+                ],
+                correct: 'B',
+                feedback: {
+                    'A': "📜 Nice decoration. Learning sold separately.",
+                    'B': "🌙 Correct. Curiosity has insomnia. Deal with it.",
+                    'C': "😴 Busy isn't impressive. Learning is."
+                }
+            },
+            {
+                text: "What choice defines Swetha today?",
+                options: [
+                    { id: 'A', text: 'Speed over meaning' },
+                    { id: 'B', text: 'Perfection over progress' },
+                    { id: 'C', text: 'Understanding over shortcuts' }
+                ],
+                correct: 'C',
+                feedback: {
+                    'A': "⚡ Fast and wrong is still wrong.",
+                    'B': "🧩 Perfection is just procrastination in a suit.",
+                    'C': "🧠 Correct. Mature choice. Engineer unlocked."
+                }
+            }
+        ];
+
         // --- STATE ---
         let currentChapter = 0;
         let isGameComplete = false;
-        let inventory = []; // Array of IDs
-        let chapterState = {
-            revealed: false
-        };
+        let inventory = [];
+        let chapterState = { revealed: false };
+        let viewMode = 'main';
 
         // --- DOM ELEMENTS ---
         const appContainer = document.getElementById('app-container');
@@ -354,25 +663,37 @@
         const modalOptions = document.getElementById('modal-options');
         const modalFeedback = document.getElementById('modal-feedback');
         const helpTooltip = document.getElementById('help-tooltip');
+        const mainView = document.getElementById('main-view');
+        const storyboardView = document.getElementById('storyboard-view');
+
+        // Storyboard elements
+        const storyBody = document.getElementById('storyBody');
+        const storyTitle = document.querySelector('.story-title');
+        const storySubtitle = document.querySelector('.story-subtitle');
+        const storyPanel = document.querySelector('.story-panel');
+        const continueBtn = document.getElementById('continueBtn');
+        const storyQuestionBox = document.getElementById('storyQuestionBox');
+        const storyQuestionText = document.getElementById('storyQuestionText');
+        const storyOptionsContainer = document.getElementById('storyOptionsContainer');
+        const storyFeedbackMessage = document.getElementById('storyFeedbackMessage');
+        const storyVideo = document.getElementById('storyVideo');
 
         // --- INITIALIZATION ---
         function init() {
-            // Check for chapter parameter in URL
             const params = new URLSearchParams(window.location.search);
             const chapterParam = params.get('chapter');
             const revealedParam = params.get('revealed');
+            const viewParam = params.get('view');
             
             if (chapterParam) {
-                currentChapter = parseInt(chapterParam);
-                // Bounds check: ensure chapter is within valid range (0-5)
+                currentChapter = parseInt(chapterParam, 10);
+                if (Number.isNaN(currentChapter)) currentChapter = 0;
                 if (currentChapter < 0) currentChapter = 0;
                 if (currentChapter >= CASE_DATA.length) currentChapter = CASE_DATA.length - 1;
             }
             
-            // Check if revealed parameter is passed (after correct answer)
             if (revealedParam === 'true') {
                 chapterState.revealed = true;
-                // Add to inventory when revealed
                 const data = CASE_DATA[currentChapter];
                 if (data && !inventory.includes(data.id)) {
                     inventory.push(data.id);
@@ -381,17 +702,68 @@
                 chapterState.revealed = false;
             }
 
-            renderChapter();
-            renderInventory();
+            // Pick starting view
+            if (viewParam === 'storyboard') {
+                setViewMode('storyboard');
+                prepareStoryboard();
+            } else {
+                setViewMode('main');
+                renderChapter();
+                renderInventory();
+            }
+
             lucide.createIcons();
-            
-            // Scroll to top
             window.scrollTo(0, 0);
         }
 
-        // --- RENDER FUNCTIONS ---
+        // --- VIEW SWITCHING ---
+        function setViewMode(mode) {
+            viewMode = mode;
+            if (mode === 'storyboard') {
+                mainView.classList.add('hidden');
+                storyboardView.classList.remove('hidden');
+                document.body.classList.remove('mode-main');
+                document.body.classList.add('mode-storyboard');
+            } else {
+                storyboardView.classList.add('hidden');
+                mainView.classList.remove('hidden');
+                document.body.classList.remove('mode-storyboard');
+                document.body.classList.add('mode-main');
+            }
+        }
+
+        function openStoryboard(chapterIndex = currentChapter) {
+            currentChapter = clampChapter(chapterIndex);
+            setViewMode('storyboard');
+            prepareStoryboard();
+            history.replaceState(null, '', `?chapter=${currentChapter}&view=storyboard`);
+        }
+
+        function returnToMain(revealed = false) {
+            setViewMode('main');
+            if (revealed) {
+                chapterState.revealed = true;
+                const data = CASE_DATA[currentChapter];
+                if (data && !inventory.includes(data.id)) {
+                    inventory.push(data.id);
+                }
+            }
+            renderChapter();
+            renderInventory();
+            history.replaceState(null, '', `?chapter=${currentChapter}${revealed ? '&revealed=true' : ''}`);
+            window.scrollTo(0, 0);
+            lucide.createIcons();
+        }
+
+        function clampChapter(idx) {
+            if (idx < 0) return 0;
+            if (idx >= CASE_DATA.length) return CASE_DATA.length - 1;
+            return idx;
+        }
+
+        // --- MAIN RENDER FUNCTIONS ---
         function renderChapter() {
-            appContainer.innerHTML = ''; // Clear container
+            appContainer.innerHTML = '';
 
             if (isGameComplete) {
                 appContainer.innerHTML = getFinalScreenHTML();
@@ -400,8 +772,6 @@
             }
 
             const data = CASE_DATA[currentChapter];
-            
-            // Safety check: if data is undefined, show error or reset
             if (!data) {
                 console.error('Invalid chapter:', currentChapter);
                 currentChapter = 0;
@@ -454,7 +824,6 @@
             appContainer.innerHTML = html;
             lucide.createIcons();
 
-            // Start typewriter effect if revealed
             if (chapterState.revealed) {
                 const storyEl = document.getElementById('typewriter-story');
                 if (storyEl) typeWriter(storyEl, data.story);
@@ -473,9 +842,9 @@
                     </div>
                     <div class="absolute inset-0 flex flex-col items-center justify-center z-10">
                         <p class="font-heading text-xl md:text-2xl mb-8 text-center max-w-md animate-flicker px-4">"${data.lockedText}"</p>
-                        <a href="storyboard.html?chapter=${currentChapter}" class="bg-[#2c1a1a] text-[#d4c5a3] px-8 py-3 rounded-sm font-heading text-xl hover:scale-105 transition-transform flex items-center gap-3 shadow-xl active:scale-95 no-underline">
+                        <button type="button" onclick="openStoryboard(${currentChapter})" class="bg-[#2c1a1a] text-[#d4c5a3] px-8 py-3 rounded-sm font-heading text-xl hover:scale-105 transition-transform flex items-center gap-3 shadow-xl active:scale-95 no-underline">
                             <i data-lucide="lock" class="w-5 h-5"></i> DECRYPT FILE
-                        </a>
+                        </button>
                     </div>
                 </div>
             `;
@@ -523,17 +892,16 @@
                         ${details.content.map(item => `<li>${item}</li>`).join('')}
                     </ul>
                 `;
-            } else {
-                return `
-                    <div class="grid grid-cols-1 gap-2 font-typewriter text-sm break-words">
-                        ${Object.entries(details.content).map(([key, value]) => `
-                            <div>
-                                <span class="font-bold uppercase opacity-60">${key}:</span> <span class="text-[#2c1a1a]">${value}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
             }
+            return `
+                <div class="grid grid-cols-1 gap-2 font-typewriter text-sm break-words">
+                    ${Object.entries(details.content).map(([key, value]) => `
+                        <div>
+                            <span class="font-bold uppercase opacity-60">${key}:</span> <span class="text-[#2c1a1a]">${value}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
         }
 
         function getFinalScreenHTML() {
@@ -585,14 +953,9 @@
         }
 
         // --- ACTIONS ---
-        function toggleHelp() {
-            helpTooltip.classList.toggle('hidden');
-        }
+        function toggleHelp() { helpTooltip.classList.toggle('hidden'); }
 
-        function skipCase() {
-            isGameComplete = true;
-            renderChapter();
-        }
+        function skipCase() { isGameComplete = true; renderChapter(); }
 
         function nextChapter() {
             if (currentChapter < CASE_DATA.length - 1) {
@@ -613,9 +976,10 @@
             chapterState.revealed = false;
             renderChapter();
             renderInventory();
+            history.replaceState(null, '', '?chapter=0');
         }
 
-        // --- MODAL LOGIC ---
+        // --- MODAL LOGIC (MAIN) ---
         function openQuestionModal() {
             const data = CASE_DATA[currentChapter];
             modalQuestion.textContent = data.question;
@@ -633,16 +997,13 @@
             modal.classList.remove('hidden');
         }
 
-        function closeModal() {
-            modal.classList.add('hidden');
-        }
+        function closeModal() { modal.classList.add('hidden'); }
 
         function handleUnlockAttempt(optionId) {
             const data = CASE_DATA[currentChapter];
             const feedbackMessage = data.feedback ? data.feedback[optionId] : (optionId === data.correctAnswer ? data.unlockMessage : data.wrongFeedback);
             
             if (optionId === data.correctAnswer) {
-                // Success
                 modalFeedback.textContent = feedbackMessage;
                 modalFeedback.classList.remove('hidden');
                 modalFeedback.classList.add('text-emerald-400');
@@ -658,17 +1019,12 @@
                     renderChapter();
                 }, 1500);
             } else {
-                // Failure
                 modalFeedback.textContent = feedbackMessage;
                 modalFeedback.classList.remove('hidden');
                 modalFeedback.classList.add('text-red-400');
                 modalFeedback.classList.remove('text-emerald-400');
-                
-                // Shake animation
                 modalContent.classList.add('animate-shake');
-                setTimeout(() => {
-                    modalContent.classList.remove('animate-shake');
-                }, 500);
+                setTimeout(() => { modalContent.classList.remove('animate-shake'); }, 500);
             }
         }
 
@@ -686,9 +1042,139 @@
             type();
         }
 
+        // --- STORYBOARD HELPERS ---
+        function typeWriterHTML(el, html, speed = 30, onComplete) {
+            let i = 0;
+            el.innerHTML = '';
+
+            function type() {
+                if (i >= html.length) {
+                    if (typeof onComplete === 'function') onComplete();
+                    return;
+                }
+
+                if (html[i] === '<') {
+                    const closeIdx = html.indexOf('>', i);
+                    if (closeIdx !== -1) {
+                        el.innerHTML += html.slice(i, closeIdx + 1);
+                        i = closeIdx + 1;
+                        requestAnimationFrame(type);
+                        return;
+                    }
+                }
+
+                el.innerHTML += html[i];
+                i++;
+                setTimeout(type, speed);
+            }
+
+            type();
+        }
+
+        function prepareStoryboard() {
+            const chapterNum = clampChapter(currentChapter);
+            const storyData = CHAPTERS.find(c => c.num === chapterNum) || CHAPTERS[0];
+            const questionData = STORYBOARD_QUESTIONS[Math.min(Math.max(chapterNum, 0), STORYBOARD_QUESTIONS.length - 1)];
+
+            if (storyTitle) storyTitle.textContent = storyData.title;
+            if (storySubtitle) storySubtitle.textContent = storyData.subtitle;
+            if (storyQuestionBox) storyQuestionBox.style.display = 'none';
+            if (continueBtn) continueBtn.style.display = 'none';
+            if (storyPanel) {
+                storyPanel.style.display = 'flex';
+                storyPanel.classList.remove('animate-fade-out');
+            }
+            if (storyFeedbackMessage) {
+                storyFeedbackMessage.style.display = 'none';
+                storyFeedbackMessage.textContent = '';
+            }
+            if (storyOptionsContainer) {
+                storyOptionsContainer.style.opacity = '1';
+                storyOptionsContainer.style.pointerEvents = 'auto';
+            }
+
+            if (storyVideo) {
+                const playAttempt = storyVideo.play();
+                if (playAttempt && typeof playAttempt.then === 'function') {
+                    playAttempt.catch(() => {});
+                }
+            }
+
+            if (storyBody) {
+                typeWriterHTML(storyBody, storyData.html, 25, () => {
+                    if (continueBtn) continueBtn.style.display = 'inline-flex';
+                    if (storyVideo) {
+                        storyVideo.pause();
+                        storyVideo.currentTime = 0;
+                    }
+                });
+            }
+
+            if (continueBtn && storyQuestionBox && storyPanel) {
+                continueBtn.onclick = () => {
+                    continueBtn.style.display = 'none';
+                    storyPanel.classList.add('animate-fade-out');
+                    
+                    // Use both animationend and timeout as fallback
+                    let transitionDone = false;
+                    const completeTransition = () => {
+                        if (transitionDone) return;
+                        transitionDone = true;
+                        storyPanel.style.display = 'none';
+                        storyPanel.classList.remove('animate-fade-out');
+                        storyQuestionBox.style.display = 'flex';
+                        storyQuestionBox.classList.remove('animate-fade-in');
+                        storyQuestionBox.classList.add('animate-fade-in');
+                        populateStoryboardQuestion(questionData, chapterNum);
+                    };
+                    
+                    storyPanel.addEventListener('animationend', completeTransition, { once: true });
+                    setTimeout(completeTransition, 500); // Fallback after 500ms
+                };
+            }
+        }
+
+        function populateStoryboardQuestion(questionData, chapterNum) {
+            if (!questionData) return;
+            if (storyQuestionText) storyQuestionText.textContent = questionData.text;
+            if (storyOptionsContainer) {
+                storyOptionsContainer.innerHTML = questionData.options.map(opt => `
+                    <button class="option-btn" onclick="selectStoryboardOption('${opt.id}', ${chapterNum})">
+                        <span class="option-letter">${opt.id}</span>
+                        <span>${opt.text}</span>
+                    </button>
+                `).join('');
+            }
+        }
+
+        function selectStoryboardOption(optionId, chapterNum) {
+            const question = STORYBOARD_QUESTIONS[Math.min(Math.max(chapterNum, 0), STORYBOARD_QUESTIONS.length - 1)];
+            const correctAnswer = question.correct;
+            const feedbackMessage = question.feedback ? question.feedback[optionId] : (optionId === correctAnswer ? '✓ CORRECT - Access Granted!' : '✗ INCORRECT - Try Again');
+
+            if (optionId === correctAnswer) {
+                storyFeedbackMessage.textContent = feedbackMessage;
+                storyFeedbackMessage.className = 'feedback-message feedback-correct';
+                storyFeedbackMessage.style.display = 'block';
+                storyOptionsContainer.style.opacity = '0.5';
+                storyOptionsContainer.style.pointerEvents = 'none';
+                
+                setTimeout(() => {
+                    returnToMain(true);
+                }, 2000);
+            } else {
+                storyFeedbackMessage.textContent = feedbackMessage;
+                storyFeedbackMessage.className = 'feedback-message feedback-incorrect';
+                storyFeedbackMessage.style.display = 'block';
+                
+                setTimeout(() => {
+                    storyFeedbackMessage.style.display = 'none';
+                }, 2000);
+            }
+        }
+
         // --- START ---
         init();
-
     </script>
 </body>
 </html>
