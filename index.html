@@ -181,6 +181,15 @@
         .option-btn:hover .option-letter { background: #d4a574; color: #1a0f0f; }
         .feedback-correct { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 2px solid #10b981; }
         .feedback-incorrect { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 2px solid #ef4444; }
+
+        /* Mobile: split storyboard 50/50 vertically */
+        @media (max-width: 768px) {
+            .storyboard-container { height: 100vh; padding: 0; }
+            .story-content { flex-direction: column; gap: 0; height: 100vh; }
+            .left-box { flex: 0 0 50vh; max-height: 50vh; }
+            .right-box { flex: 0 0 50vh; max-height: 50vh; }
+            .story-panel, .question-box { height: 100%; }
+        }
     </style>
 </head>
 <body class="mode-main text-[#d4c5a3] font-sans relative selection:bg-emerald-900 selection:text-white">
